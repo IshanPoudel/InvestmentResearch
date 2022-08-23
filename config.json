@@ -1,0 +1,7 @@
+{
+  "host"    :
+          "stocknewsforapp.cyjixrzfnguq.us-east-2.rds.amazonaws.com",
+  "username" :
+          "admin",
+  "password" : "stock_news"
+}
