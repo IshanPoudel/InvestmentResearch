@@ -25,5 +25,5 @@ db = mysql.connector.connect(host=data['host'],
 mycursor = db.cursor()
 
 
-mycursor.execute("CREATE TABLE news (stock_ticker VARCHAR(20) , news_headline VARCHAR(500))")
+mycursor.execute("CREATE TABLE news (stock_ticker VARCHAR(20) , news_headline VARCHAR(500) , news_summary VARCHAR(2000) , news_provider VARCHAR(100)  , news_link VARCHAR (1000) , news_image_link VARCHAR (5000) , AddedDate datetime default now() ) ")
 

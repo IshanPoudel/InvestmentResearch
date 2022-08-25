@@ -23,76 +23,110 @@ chrome_options = Options()  # Instantiate an options class for the selenium webd
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
 
+def parse_news_link(html):
+    soup = BeautifulSoup(html, 'html.parser')
+    soup = soup.find('a', href=True)
+    return (soup['href'])
+
+def parse_image_link(html):
+
+    soup = BeautifulSoup(html, 'html.parser')
+    soup = soup.find('img')
+    return (soup['src'])
+
 def get_news_from_google(key):
-    print("I am here")
+
+    chrome_options = Options()  # Instantiate an options class for the selenium webdriver
+    chrome_options.add_argument("--headless")  # So that a chrome window does not pop up
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+
+    driver.implicitly_wait(20)
 
 
 
-    # change space to a + sign as used by google url
-    key = key.lower().replace(" ", "-")
-    # url = "https://www.google.com/search?q=" + key + "&source=lmns&tbm=nws&bih=717&biw=1309&rlz=1C5CHFA_enNP906NP906&hl=en-US&sa=X&ved=2ahUKEwjzs8Wsnpz3AhUM0FMKHUsmADsQ_AUoAXoECAEQAQ"
-    url = "https://www.google.com/search?q="+key+"++stock+news&biw=1309&bih=746&tbs=qdr%3Aw%2Csbd%3A1&tbm=nws&ei=HhQFY4_xEdKjqtsP5bmAkAY&ved=0ahUKEwiP-Ozxw935AhXSkWoFHeUcAGIQ4dUDCA4&uact=5&oq=UAA++stock+news&gs_lcp=Cgxnd3Mtd2l6LW5ld3MQAzIFCAAQkQIyBAgAEB4yBQgAEIYDMgUIABCGAzIFCAAQhgMyBQgAEIYDOgUIABCABDoGCAAQHhAHUABYlQNg5QVoAHAAeACAAVqIAb8CkgEBNJgBAKABAcABAQ&sclient=gws-wiz-news"
-    driver.get(url)
+    try:
 
-    time.sleep(10)
+        # change space to a + sign as used by google url
+        key = key.lower().replace(" ", "-")
+        # url = "https://www.google.com/search?q=" + key + "&source=lmns&tbm=nws&bih=717&biw=1309&rlz=1C5CHFA_enNP906NP906&hl=en-US&sa=X&ved=2ahUKEwjzs8Wsnpz3AhUM0FMKHUsmADsQ_AUoAXoECAEQAQ"
+        url = "https://www.google.com/search?q="+key+"++stock+news&biw=1309&bih=746&tbs=qdr%3Aw%2Csbd%3A1&tbm=nws&ei=HhQFY4_xEdKjqtsP5bmAkAY&ved=0ahUKEwiP-Ozxw935AhXSkWoFHeUcAGIQ4dUDCA4&uact=5&oq=UAA++stock+news&gs_lcp=Cgxnd3Mtd2l6LW5ld3MQAzIFCAAQkQIyBAgAEB4yBQgAEIYDMgUIABCGAzIFCAAQhgMyBQgAEIYDOgUIABCABDoGCAAQHhAHUABYlQNg5QVoAHAAeACAAVqIAb8CkgEBNJgBAKABAcABAQ&sclient=gws-wiz-news"
+        driver.get(url)
 
-    #declare array and string for the news.
-    google_news_title_text= []
-    google_news_link = []
+        time.sleep(10)
 
-    #Get the html page
-    html_text = driver.page_source
+        #declare array and string for the news.
+        google_news_title_text= []
+        google_news_link = []
 
-    soup = BeautifulSoup(html_text, 'html.parser')
+        #Get the html page
+        html_text = driver.page_source
 
+        driver.implicitly_wait(20)
 
+        soup = BeautifulSoup(html_text, 'html.parser')
 
+        News_Tuple=[]
 
-    XPATH_TUPLE_FOR_NEWS_TITLE  = (By.XPATH ,  "//*[@id='rso']/div/div/div[1]")
-    XPATH_TUPLE_FOR_NEWS_SUMMARY = (By.XPATH , "//*[@id='rso']/div/div/div[1]/div/a/div/div[2]/div[3]")
-    XPATH_TUPLE_FOR_NEWS_COMPANY = (By.XPATH , "//*[@id='rso']/div/div/div[1]/div/a/div/div[2]/div[1]/span")
-    XPATH_TUPLE_FOR_NEWS_LINK = (By.XPATH , "//*[@id='rso']/div/div/div[3]/div/a/div/div[1]/div/div")
+    except:
+        print("Could not get source")
+        return  "Error"
+        driver.close()
+        quit()
 
-    data = driver.find_element(*XPATH_TUPLE_FOR_NEWS_CARD)
-    print(data.text)
-    html_for_house_cards = data.get_attribute('innnerHTML')
-    print(html_for_house_cards)
+    for i in range(1, 6):
 
-    # // *[ @ id = "rso"] / div / div / div[1] / div / a / div / div[2] / div[2]
+        try:
 
-    # for news in us_news_blob:
-    #
-    #     news_class = news.find("div", {"class": "v7W49e"})
-    #     # Iterate through <div id="search">
-    #     #                      <div class="v7W49e" >
-    #     #                           <div hase="i" >
-    #     news_hve_id = news_class.find_all("g-card")
-    #     print(news_hve_id)
-    #
-    #     for actual_news in news_hve_id:
-    #
-    #
-    #         try:
-    #
-    #             news_text = actual_news.find("div", {"role": "heading"}).text
-    #             google_news_title_text.append(news_text)
-    #             news_title = actual_news.a['href']
-    #             google_news_link.append(news_title)
-    #             print("i added" + news_title)
-    #             driver.close()
-    #         except Exception as e:
-    #             print("Error")
-    #             driver.close()
-    return  google_news_title_text , google_news_link
+            Value_Tuple = []
+            Value_Tuple.append(key)
 
 
 
 
+            XPATH_TUPLE_FOR_NEWS_TITLE  = (By.XPATH ,  "// *[ @ id = 'rso'] / div / div / div["+str(i)+"] / div / a / div / div[2] / div[2]")
+            XPATH_TUPLE_FOR_NEWS_SUMMARY = (By.XPATH , "//*[@id='rso']/div/div/div["+str(i)+"]/div/a/div/div[2]/div[3]")
+            XPATH_TUPLE_FOR_NEWS_COMPANY = (By.XPATH , "//*[@id='rso']/div/div/div["+str(i)+"]/div/a/div/div[2]/div[1]/span")
 
-title , link = get_news_from_google("AAPL")
-print("I am outside the function")
-for i in range(len(title)) :
+            XPATH_TUPLE_FOR_NEWS_LINK = (By.XPATH , " // *[ @ id = 'rso'] / div / div / div["+str(i)+"] / div ")
+            XPATH_TUPLE_FOR_IMAGE_LINK = (By.XPATH , "//*[@id='rso']/div/div/div["+str(i)+"]/div/a/div/div[1]/div/div")
 
-    print("I am here")
 
-driver.close()
+
+            data = driver.find_element(*XPATH_TUPLE_FOR_NEWS_TITLE)
+            # print(data.text)
+            Value_Tuple.append(data.text)
+
+            data = driver.find_element(*XPATH_TUPLE_FOR_NEWS_SUMMARY)
+            # print(data.text)
+            Value_Tuple.append(data.text)
+
+            data = driver.find_element(*XPATH_TUPLE_FOR_NEWS_COMPANY)
+            # print(data.text)
+            Value_Tuple.append(data.text)
+            #
+            data = driver.find_element(*XPATH_TUPLE_FOR_NEWS_LINK)
+            # print(data.get_attribute('innerHTML'))
+            # print(parse_news_link(data.get_attribute('innerHTML')))
+            Value_Tuple.append(parse_news_link(data.get_attribute('innerHTML')))
+
+            data = driver.find_element(*XPATH_TUPLE_FOR_IMAGE_LINK)
+            # print(data.get_attribute('innerHTML'))
+            # print(parse_image_link(data.get_attribute('innerHTML')))
+            Value_Tuple.append(parse_image_link(data.get_attribute('innerHTML')))
+
+            News_Tuple.append(Value_Tuple)
+
+            print('\n')
+
+        except:
+            print('Could not get link for ' + key)
+            driver.close()
+
+            pass
+
+    return  News_Tuple
+
+
+
+
+
