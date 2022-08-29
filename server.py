@@ -39,14 +39,25 @@ def get_specific_news():
     mycursor.execute(query)
     rows = mycursor.fetchall()
 
-    return {"data": rows}
+    news_array = []
+
+
+    for key , value in rows:
+
+        news_array.append(value)
+
+
+
+
+
+    return {stock_ticker: news_array}
 
 
 
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(  debug=True , host="0.0.0.0")
 
 
 
