@@ -30,12 +30,12 @@ def get_news():
     return {"data": rows}
 
 
-@app.route('/get_specific_news' )
-def get_specific_news():
+@app.route('/get_specific_news/<string:ticker>' , methods=['GET'] )
+def get_specific_news(ticker):
 
     # stock_ticker = request.form['stock_ticker']
-    stock_ticker = 'goog'
-    query = "select stock_ticker , news_headline from news where stock_ticker = '"+stock_ticker+"'"
+
+    query = "select stock_ticker , news_headline from news where stock_ticker = '"+ticker+"'"
     mycursor.execute(query)
     rows = mycursor.fetchall()
 
@@ -50,7 +50,7 @@ def get_specific_news():
 
 
 
-    return {stock_ticker: news_array}
+    return {ticker: news_array}
 
 
 
