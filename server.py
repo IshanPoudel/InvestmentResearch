@@ -23,11 +23,17 @@ mycursor = db.cursor()
 @app.route('/get_news' )
 def get_news():
 
-    query = 'select stock_ticker , news_headline , AddedDate from news '
+    query = 'select stock_ticker , news_headline from news '
     mycursor.execute(query)
     rows = mycursor.fetchall()
 
-    return {"data": rows}
+    news_array = []
+
+    for key , value in rows:
+        news_array.append(value)
+
+
+    return {"data": news_array}
 
 
 @app.route('/get_specific_news/<string:ticker>' , methods=['GET'] )
@@ -51,6 +57,8 @@ def get_specific_news(ticker):
 
 
     return {ticker: news_array}
+
+
 
 
 
