@@ -2,21 +2,52 @@ import pickle
 import json
 import numpy as np
 
+import  pandas as pd
+import numpy as np
+from tqdm import tqdm
+from keras.preprocessing.text import Tokenizer
+tqdm.pandas(desc="progress-bar")
+from gensim.models import Doc2Vec
+from sklearn import utils
+from sklearn.model_selection import train_test_split
+from keras_preprocessing.sequence import pad_sequences
+
+import gensim
+from sklearn.linear_model import LogisticRegression
+from gensim.models.doc2vec import TaggedDocument
+import re
+import seaborn as sns
+import matplotlib.pyplot as plt
+from tensorflow.keras.models import load_model
+
+
 
 __model = None
 
 
-def get_positive_or_negative(sentence):
-    #load the model.
-    return (__model.predict(sentence))
+def get_negative_neutral_positive(sentence):
+    global __model
 
+    load_artifacts()
+    message = ['The local electronics industry is expected to remain stable amid layoff concerns surrounding Japanese electronics giants operating in the country, an official says.']
+
+    tokenizer = Tokenizer(num_words=50000 , split=' ' , filters= '!"#$%&()*+,-./:;<=>?@[\]^_`{|}~' , lower=True)
+    seq = tokenizer.texts_to_sequences(message)
+
+    padded = pad_sequences(seq , maxlen=50 , dtype='int32' , value=0)
+
+    pred = __model.predict(padded)
+
+    labels = ['Negative' , 'Neutral' , 'Positive']
+
+    print(pred , labels[np.argmax(pred)])
+    return (labels[np.argmax(pred) ])
 
 def load_artifacts():
 
     ''' Loads our ML model'''
     global __model
 
-    with open("Scratch/positive_or_negative.pickle" , 'rb') as f:
-        __model = pickle.load(f)
+    __model = load_model('Mymodel.h5')
 
     print('Artifacts loaded')

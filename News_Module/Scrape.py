@@ -18,6 +18,7 @@ import traceback
 
 
 
+
 chrome_options = Options()  # Instantiate an options class for the selenium webdriver
 # chrome_options.add_argument("--headless")  # So that a chrome window does not pop up
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)

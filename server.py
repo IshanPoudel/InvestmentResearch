@@ -2,6 +2,7 @@
 
 import mysql.connector
 import json
+from utils import get_negative_neutral_positive
 
 from flask import Flask , request , jsonify
 
@@ -46,17 +47,20 @@ def get_specific_news(ticker):
     rows = mycursor.fetchall()
 
     news_array = []
+    sentiment_prediction=[]
 
 
     for key , value in rows:
 
         news_array.append(value)
+        sentiment_prediction.append(get_negative_neutral_positive(value))
 
 
 
 
 
-    return {ticker: news_array}
+    return {ticker: news_array , "Sentiment" : sentiment_prediction}
+
 
 
 
