@@ -25,11 +25,11 @@ from tensorflow.keras.models import load_model
 __model = None
 
 
-def get_negative_neutral_positive(sentence):
+def get_negative_neutral_positive(message):
     global __model
 
-    load_artifacts()
-    message = ['The local electronics industry is expected to remain stable amid layoff concerns surrounding Japanese electronics giants operating in the country, an official says.']
+
+    # message = ['The local electronics industry is expected to remain stable amid layoff concerns surrounding Japanese electronics giants operating in the country, an official says.']
 
     tokenizer = Tokenizer(num_words=50000 , split=' ' , filters= '!"#$%&()*+,-./:;<=>?@[\]^_`{|}~' , lower=True)
     seq = tokenizer.texts_to_sequences(message)
@@ -40,7 +40,7 @@ def get_negative_neutral_positive(sentence):
 
     labels = ['Negative' , 'Neutral' , 'Positive']
 
-    print(pred , labels[np.argmax(pred)])
+    # print(pred , labels[np.argmax(pred)])
     return (labels[np.argmax(pred) ])
 
 def load_artifacts():
@@ -51,3 +51,8 @@ def load_artifacts():
     __model = load_model('Mymodel.h5')
 
     print('Artifacts loaded')
+
+
+
+if __name__ == '__main__':
+    load_artifacts()

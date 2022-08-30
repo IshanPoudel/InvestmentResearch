@@ -3,8 +3,10 @@
 import mysql.connector
 import json
 from utils import get_negative_neutral_positive
+from  utils import load_artifacts
 
 from flask import Flask , request , jsonify
+import random
 
 app = Flask(__name__)
 
@@ -29,9 +31,14 @@ def get_news():
     rows = mycursor.fetchall()
 
     news_array = []
-
     for key , value in rows:
-        news_array.append(value)
+        nnp = get_negative_neutral_positive(value)
+        news_array.append((key , value ,nnp))
+
+    # for each news shuffle it .
+    random.shuffle(news_array)
+
+
 
 
     return {"data": news_array}
@@ -52,14 +59,14 @@ def get_specific_news(ticker):
 
     for key , value in rows:
 
-        news_array.append(value)
-        sentiment_prediction.append(get_negative_neutral_positive(value))
+        news_array.append( (value  , get_negative_neutral_positive(value)))
 
 
 
 
 
-    return {ticker: news_array , "Sentiment" : sentiment_prediction}
+
+    return { "data" : news_array}
 
 
 
@@ -69,7 +76,10 @@ def get_specific_news(ticker):
 
 
 if __name__ == "__main__":
+    load_artifacts()
     app.run(  debug=True , host="0.0.0.0")
+
+
 
 
 
