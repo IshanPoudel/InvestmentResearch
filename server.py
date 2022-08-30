@@ -35,7 +35,7 @@ def get_news():
     # datetime
     # default
     # now()
-    query = 'select stock_ticker , news_headline , news_summary , news_provider , news_link , news_image_link from news '
+    query = 'select stock_ticker , news_headline , news_summary , news_provider , news_link , news_image_link from news ORDER BY RAND() LIMIT 10 '
     mycursor.execute(query)
     rows = mycursor.fetchall()
 
