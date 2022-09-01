@@ -86,8 +86,8 @@ def get_specific_news(ticker):
 
 if __name__ == "__main__":
     load_artifacts()
-    print("I loaded artifacts")
-    app.run(  debug=True , host="0.0.0.0")
+
+    app.run(  debug=True , host="10.219.155.18")
 
 
 
