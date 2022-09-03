@@ -20,9 +20,17 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from tensorflow.keras.models import load_model
 
+from transformers import  AutoTokenizer , AutoModelForSequenceClassification
+
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+
+
+import torch
+
 
 
 __model = None
+__tokenizer = None
 
 
 def get_negative_neutral_positive(message):
@@ -43,12 +51,50 @@ def get_negative_neutral_positive(message):
     # print(pred , labels[np.argmax(pred)])
     return (labels[np.argmax(pred) ])
 
+def use_finbert_model(message):
+
+    inputs = __tokenizer(message , padding=True , truncation = True , return_tensors = 'pt')
+
+    outputs = __model(**inputs)
+    predictions = torch.nn.functional.softmax(outputs.logits , dim = -1)
+
+    positive = predictions[:, 0].tolist()
+    negative = predictions[:, 1].tolist()
+    neutral = predictions[:, 2].tolist()
+
+    print(positive , negative , neutral)
+
+    # Find the max of three value.
+
+    if (positive[0]>negative[0] and positive[0]>neutral[0]):
+        return  "Positive"
+    if (negative[0]>positive[0] and negative[0] > neutral[0]):
+        return "Negative"
+    if (neutral[0] > positive[0] and neutral[0] >negative[0]):
+        return "Neutral"
+
+
+
+
+
+#
+
+
+
+
+
+
 def load_artifacts():
 
     ''' Loads our ML model'''
     global __model
+    global __tokenizer
 
     __model = load_model('Mymodel.h5')
+
+    __tokenizer = AutoTokenizer.from_pretrained("ProsusAI/finbert")
+
+    __model = AutoModelForSequenceClassification.from_pretrained("ProsusAI/finbert")
 
     print('Artifacts loaded')
 

@@ -4,6 +4,7 @@ import mysql.connector
 import json
 from utils import get_negative_neutral_positive
 from  utils import load_artifacts
+from utils import use_finbert_model
 
 from flask import Flask , request , jsonify
 import random
@@ -39,10 +40,13 @@ def get_news():
     mycursor.execute(query)
     rows = mycursor.fetchall()
 
+
+
+
     news_array = []
     for key , value , summary , provider , link , image_link in rows:
-        nnp = get_negative_neutral_positive(value)
-        news_array.append((key , value ,nnp , summary , provider , link , image_link))
+        prediciton = use_finbert_model(value)
+        news_array.append((key , value ,prediciton , summary , provider , link , image_link))
 
     # for each news shuffle it .
     random.shuffle(news_array)
@@ -68,7 +72,7 @@ def get_specific_news(ticker):
 
     for key , value , summary , provider , link , image_link in rows:
 
-        news_array.append( (value  , get_negative_neutral_positive(value) , summary , provider , link , image_link))
+        news_array.append( (value  , use_finbert_model(value) , summary , provider , link , image_link))
 
 
 
