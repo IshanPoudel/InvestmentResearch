@@ -23,3 +23,4 @@ db = mysql.connector.connect(host=data['host'],
 
 
 mycursor = db.cursor()
+
