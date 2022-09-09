@@ -62,7 +62,8 @@ def get_specific_news(ticker):
 
     # stock_ticker = request.form['stock_ticker']
 
-    query = "select stock_ticker , news_headline , news_summary , news_provider , news_link , news_image_link from news where stock_ticker = '"+ticker+"'"
+    # query = "select stock_ticker , news_headline , news_summary , news_provider , news_link , news_image_link from news where stock_ticker = '"+ticker+"'"
+    query = "select stock_ticker , news_headline ,news_summary , news_provider , news_link , news_image_link from news where stock_ticker = '" + ticker + "' ORDER BY AddedDate DESC"
     mycursor.execute(query)
     rows = mycursor.fetchall()
 
@@ -91,7 +92,11 @@ def get_specific_news(ticker):
 if __name__ == "__main__":
     load_artifacts()
 
-    app.run(  debug=True , host="10.219.155.18")
+    # app.run(debug=True, host="10.219.155.18")
+
+    # app.run(  debug=True , host="0.0.0.0")
+    app.run(host="0.0.0.0", port=5000, debug=True)
+    # app.run(host="10.219.155.18" , port=5000 , debug=True)
 
 
 

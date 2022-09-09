@@ -1,8 +1,11 @@
+import sys
+sys.path.append("..")
 import re
 import time
 import logging
 import csv
 from bs4 import BeautifulSoup
+import json
 
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
@@ -36,6 +39,8 @@ def parse_image_link(html):
     return (soup['src'])
 
 def get_news_from_google(key):
+    with open('../website.json') as website_link:
+        web_link = json.load(website_link)
 
     chrome_options = Options()  # Instantiate an options class for the selenium webdriver
     chrome_options.add_argument("--headless")  # So that a chrome window does not pop up
@@ -113,17 +118,22 @@ def get_news_from_google(key):
             data = driver.find_element(*XPATH_TUPLE_FOR_IMAGE_LINK)
             # print(data.get_attribute('innerHTML'))
             # print(parse_image_link(data.get_attribute('innerHTML')))
+
+
+
             Value_Tuple.append(parse_image_link(data.get_attribute('innerHTML')))
 
             News_Tuple.append(Value_Tuple)
+
 
             print('\n')
 
         except:
             print('Could not get link for ' + key)
-            driver.close()
+
 
             pass
+    driver.close()
 
     return  News_Tuple
 
