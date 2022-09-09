@@ -13,7 +13,7 @@ db = mysql.connector.connect(host=data['host'],
 mycursor = db.cursor()
 
 mycursor.execute("DROP DATABASE IF EXISTS user_table")
-mycursor.execute("CREATE DATABASE stock_news")
+mycursor.execute("CREATE DATABASE user_table")
 
 db = mysql.connector.connect(host=data['host'],
                              user=data['username'],
@@ -22,5 +22,5 @@ db = mysql.connector.connect(host=data['host'],
                             )
 
 
-mycursor = db.cursor()
+mycursor = db.cursor("CREATE TABLE user_id (user_id int , FirstName varchar(255), UserEmail varchar(500) , UserPassword varchar(500) )")
 
