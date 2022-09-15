@@ -82,6 +82,10 @@ def get_specific_news(ticker):
 
     return { "data" : news_array}
 
+@app.route('request/<string:ticker>' , methods = ['GET'])
+def add_stock(ticker):
+    query = "insert into stock_ticker_to_add values(%s)"
+    mycursor.execute(query)
 
 
 
